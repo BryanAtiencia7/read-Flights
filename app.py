@@ -11,15 +11,15 @@ def get_db_connection():
         database='db_aerolinea'
     )
 
-@app.route('/aerolineas/<int:id>', methods=['DELETE'])
-def eliminar_aerolinea(id):
+@app.route('/aerolineas', methods=['GET'])
+def leer_aerolineas():
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM aerolineas WHERE ID = %s", (id,))
-    conn.commit()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM aerolineas")
+    aerolineas = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify({"message": "Aerolinea eliminada exitosamente"})
+    return jsonify(aerolineas)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5003)
+    app.run(host='0.0.0.0', port=5001)
